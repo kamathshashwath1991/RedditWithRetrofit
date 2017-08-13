@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.example.android.redditclone.model.Feed;
 import com.example.android.redditclone.model.entry.Entry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
                 List<Entry> entries= response.body().getEntries();
                 Log.d(TAG, "onResponse: get entries"+ entries);
 
+                ArrayList<Post> posts= new ArrayList<Post>();
+
                 for (int i=0; i< entries.size();i++){
                     ExtractXML  extractXML1= new ExtractXML(entries.get(0).getContent(),"<a href=");
                     List<String> postContent= extractXML1.start();
@@ -59,6 +62,23 @@ public class MainActivity extends AppCompatActivity {
                         Log.e(TAG, "onResponse: Index Out of bounds exception "+ e.getMessage() );
                         postContent.add(null);
                     }
+
+                    posts.add(new Post(
+                       entries.get(0).getTitle(),
+                            entries.get(0).getAuthor().getName(),
+                            entries.get(0).getUpdated(),
+                            postContent.get(0),
+                            postContent.get(postContent.size()-1)
+                    ));
+                }
+                for (int j=0; j <posts.size(); j++){
+                    Log.d(TAG, "onResponse:  \n"+
+                                    "Post Url"+ posts.get(j).getPostUrl() + "\n" +
+                                    "ThumbNail: " + posts.get(j).getThumbnailURL() + "\n" +
+                                    "Titlte" + posts.get(j).getTitle() +"\n" +
+                                            "Author" + posts.get(j).getAuthor()+ "\n" +
+                                            "updated" +posts.get(j).getDate_updated()
+                    );
                 }
 
             }
