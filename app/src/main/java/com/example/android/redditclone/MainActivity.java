@@ -43,10 +43,27 @@ public class MainActivity extends AppCompatActivity {
 
                 List<Entry> entries= response.body().getEntries();
                 Log.d(TAG, "onResponse: get entries"+ entries);
-                Log.d(TAG, "onResponse: author" + entries.get(0).getAuthor());
-                Log.d(TAG, "onResponse: updated"+ entries.get(0).getUpdated());
-                Log.d(TAG, "onResponse: title"+ entries.get(0).getTitle());
+
+                for (int i=0; i< entries.size();i++){
+                    ExtractXML  extractXML1= new ExtractXML(entries.get(0).getContent(),"<a href=");
+                    List<String> postContent= extractXML1.start();
+
+
+                    ExtractXML  extractXML2= new ExtractXML(entries.get(0).getContent(),"<img src=");
+                    try {
+                        postContent.add(extractXML2.start().get(0));
+                    }catch (NullPointerException e){
+                        Log.e(TAG, "onResponse: Null Pointer exception" + e.getMessage() );
+                        postContent.add(null);
+                    }catch (IndexOutOfBoundsException e){
+                        Log.e(TAG, "onResponse: Index Out of bounds exception "+ e.getMessage() );
+                        postContent.add(null);
+                    }
+                }
+
             }
+
+
 
             @Override
             public void onFailure(Call<Feed> call, Throwable t) {
