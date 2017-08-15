@@ -2,6 +2,8 @@ package com.example.android.redditclone;
 
 import com.example.android.redditclone.model.Feed;
 
+import org.simpleframework.xml.Path;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 
@@ -12,8 +14,8 @@ import retrofit2.http.GET;
 public interface ReddtiFeed  {
      String BASE_URL="https://www.reddit.com/r/";
 
-    @GET("earthporn/.rss")
-    Call<Feed> getFeed();
+    @GET("{feed_name}/.rss")
+    Call<Feed> getFeed(@Path("feed_name") String feed_name);
 
 
 }

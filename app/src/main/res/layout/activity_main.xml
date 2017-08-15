@@ -1,16 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.redditclone.MainActivity">
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout"
+        android:orientation="horizontal"
+        android:weightSum="100">
+        
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="75"
+            android:id="@+id/edit_feeds"
+            android:hint="Enter SubReddit"
+            android:layout_gravity="bottom"
+            android:textAlignment="center"
+            />
+        
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="25"
+            android:text="Refresh Feed"
+            android:layout_gravity="center"
+            android:id="@+id/feed_refresh"
+            android:gravity="center"/>
+        
+    </LinearLayout>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/ListViewMain">
+        android:id="@+id/ListViewMain"
+        android:layout_below="@+id/linearLayout">
 
     </ListView>
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

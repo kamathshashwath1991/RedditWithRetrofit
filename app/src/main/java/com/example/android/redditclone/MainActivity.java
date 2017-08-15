@@ -3,6 +3,9 @@ package com.example.android.redditclone;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -23,19 +26,42 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final String BASE_URL = "https://www.reddit.com/r/";
+    private Button refresh_feed;
+    private EditText mfeedName;
+    private String currentFeed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        refresh_feed= (Button) findViewById(R.id.feed_refresh);
+        mfeedName= (EditText) findViewById(R.id.edit_feeds);
+
+        refresh_feed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String feedName= mfeedName.getText().toString();
+                if (!feedName.equals("")){
+                    currentFeed=feedName;
+                    initUI();
+                }
+                else {
+                    initUI();
+                }
+            }
+        });
+        initUI();
+    }
+
+    private void initUI(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
 
         ReddtiFeed reddtiFeed = retrofit.create(ReddtiFeed.class);
-        Call<Feed> call = reddtiFeed.getFeed();
+        Call<Feed> call = reddtiFeed.getFeed(currentFeed);
 
         call.enqueue(new Callback<Feed>() {
             @Override
@@ -63,14 +89,25 @@ public class MainActivity extends AppCompatActivity {
                         Log.e(TAG, "onResponse: Index Out of bounds exception " + e.getMessage());
                         postContent.add(null);
                     }
+                    try{
+                        posts.add(new Post(
+                                entries.get(i).getTitle(),
+                                entries.get(i).getAuthor().getName(),
+                                entries.get(i).getUpdated(),
+                                postContent.get(0),
+                                postContent.get(postContent.size() - 1)
+                        ));
+                    }catch (NullPointerException e){
+                        posts.add(new Post(
+                                entries.get(i).getTitle(),
+                                "None",
+                                entries.get(i).getUpdated(),
+                                postContent.get(0),
+                                postContent.get(postContent.size() - 1)
+                        ));
 
-                    posts.add(new Post(
-                            entries.get(i).getTitle(),
-                            entries.get(i).getAuthor().getName(),
-                            entries.get(i).getUpdated(),
-                            postContent.get(0),
-                            postContent.get(postContent.size() - 1)
-                    ));
+                    }
+
                 }
 
                 /*
@@ -99,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "an error occured", Toast.LENGTH_LONG).show();
             }
         });
+
 
     }
 }
