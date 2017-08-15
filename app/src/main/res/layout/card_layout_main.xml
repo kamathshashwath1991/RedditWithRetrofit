@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     >
 
     <android.support.v7.widget.CardView
@@ -18,13 +22,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
             <ImageView
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:id="@+id/cardImage"
                 android:scaleType="centerCrop"/>
-            
+
+
             <RelativeLayout
+                android:layout_marginLeft="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/cardImage">
@@ -33,28 +40,40 @@
                     android:id="@+id/cardTitle"
                     android:gravity="center_vertical"
                     android:text="Card Title"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true" />
-
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:text="Author"
+                    android:layout_below="@+id/cardTitle"
+                    android:gravity="center_vertical"
                     android:id="@+id/cardAuthor"
-                    android:gravity="center_vertical"/>
+                    android:layout_marginTop="3dp"/>
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Updated"
                     android:textSize="12sp"
+                    android:text="Updated"
+                    android:layout_below="@+id/cardAuthor"
                     android:gravity="center_vertical"
+                    android:id="@+id/cardUpdated"
                     android:layout_marginTop="3dp"/>
 
             </RelativeLayout>
+
+            <ProgressBar
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/ProgressDialog"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"/>
+
 
         </RelativeLayout>
 

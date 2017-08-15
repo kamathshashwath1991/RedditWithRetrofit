@@ -3,6 +3,7 @@ package com.example.android.redditclone;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
                             postContent.get(postContent.size() - 1)
                     ));
                 }
+
+                /*
                 for (int j = 0; j < posts.size(); j++) {
                     Log.d(TAG, "onResponse:  \n" +
                             "Post Url" + posts.get(j).getPostUrl() + "\n" +
@@ -79,9 +82,15 @@ public class MainActivity extends AppCompatActivity {
                             "Author" + posts.get(j).getAuthor() + "\n" +
                             "updated" + posts.get(j).getDate_updated()
                     );
+
                 }
+        */
+                ListView listViewPost= (ListView) findViewById(R.id.ListViewMain);
+                CustomAdapter mCustromAdapter= new CustomAdapter(getApplicationContext(),R.layout.card_layout_main,posts);
+                listViewPost.setAdapter((ListAdapter) mCustromAdapter);
 
             }
+
 
 
             @Override
