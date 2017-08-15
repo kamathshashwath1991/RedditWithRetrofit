@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         refresh_feed= (Button) findViewById(R.id.feed_refresh);
         mfeedName= (EditText) findViewById(R.id.edit_feeds);
 
+        initUI();
+
         refresh_feed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        initUI();
     }
 
     private void initUI(){
