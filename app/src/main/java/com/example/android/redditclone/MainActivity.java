@@ -49,11 +49,11 @@ public class MainActivity extends AppCompatActivity {
                 ArrayList<Post> posts = new ArrayList<Post>();
 
                 for (int i = 0; i < entries.size(); i++) {
-                    ExtractXML extractXML1 = new ExtractXML(entries.get(0).getContent(), "<a href=");
+                    ExtractXML extractXML1 = new ExtractXML(entries.get(i).getContent(), "<a href=");
                     List<String> postContent = extractXML1.start();
 
 
-                    ExtractXML extractXML2 = new ExtractXML(entries.get(0).getContent(), "<img src=");
+                    ExtractXML extractXML2 = new ExtractXML(entries.get(i).getContent(), "<img src=");
                     try {
                         postContent.add(extractXML2.start().get(0));
                     } catch (NullPointerException e) {
@@ -65,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     posts.add(new Post(
-                            entries.get(0).getTitle(),
-                            entries.get(0).getAuthor().getName(),
-                            entries.get(0).getUpdated(),
+                            entries.get(i).getTitle(),
+                            entries.get(i).getAuthor().getName(),
+                            entries.get(i).getUpdated(),
                             postContent.get(0),
                             postContent.get(postContent.size() - 1)
                     ));
