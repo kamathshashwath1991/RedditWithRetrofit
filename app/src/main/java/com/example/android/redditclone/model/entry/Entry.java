@@ -12,6 +12,8 @@ import java.io.Serializable;
 @Root(name= "entry", strict = false)
 public class Entry implements Serializable {
 
+
+
     @Element(name = "content")
     private String content;
 
@@ -24,6 +26,11 @@ public class Entry implements Serializable {
     @Element(name = "updated")
     private String updated;
 
+    @Element(name = "id")
+    private String id;
+
+
+
     public Entry(){}
 
     public Entry(String content, Author  author, String title,String updated){
@@ -33,16 +40,6 @@ public class Entry implements Serializable {
         this.updated= updated;
     }
 
-
-    @Override
-    public String toString() {
-        return "Entry{" +
-                "content='" + content + '\'' +
-                ", author='" + author + '\'' +
-                ", title='" + title + '\'' +
-                ", updated='" + updated + '\'' +
-                '}';
-    }
 
     public String getContent() {
         return content;
@@ -76,5 +73,23 @@ public class Entry implements Serializable {
         this.updated = updated;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Entry{" +
+                "content='" + content + '\'' +
+                ", author=" + author +
+                ", title='" + title + '\'' +
+                ", updated='" + updated + '\'' +
+                ", id='" + id + '\'' +
+                '}';
+    }
 
 }

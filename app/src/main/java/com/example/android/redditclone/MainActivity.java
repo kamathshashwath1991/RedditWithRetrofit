@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.android.redditclone.Comments.CommentsActivity;
 import com.example.android.redditclone.model.Feed;
 import com.example.android.redditclone.model.entry.Entry;
 
@@ -26,7 +27,8 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private static final String BASE_URL= "https://www.reddit.com/r/";
+    URLS urls= new URLS();
+
     private Button btnRefresh;
     private EditText mFeedName;
     private String currentFeed;
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         Retrofit retrofit= new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(urls.BASE_URL)
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
 
@@ -90,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                         postContent.add(null);
                     }catch (IndexOutOfBoundsException e){
                         postContent.add(null);
-                        Log.e(TAG, "onResponse: IndexOut of bound  (thumbnail)" +e.getMessage() );
                     }
                     int lastPosition= postContent.size()-1;
                     try{
