@@ -24,6 +24,16 @@ public class Entry implements Serializable {
     @Element(name = "updated")
     private String updated;
 
+    public Entry(){}
+
+    public Entry(String content, Author  author, String title,String updated){
+        this.content= content;
+        this.author= author;
+        this.title= title;
+        this.updated= updated;
+    }
+
+
     @Override
     public String toString() {
         return "Entry{" +
@@ -66,13 +76,5 @@ public class Entry implements Serializable {
         this.updated = updated;
     }
 
-    public Entry(){}
-
-    public Entry(String content, Author author, String title,String updated){
-        this.content= content;
-        this.author= author;
-        this.title= title;
-        this.updated= updated;
-    }
 
 }

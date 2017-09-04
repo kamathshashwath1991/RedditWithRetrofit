@@ -15,8 +15,8 @@ public class Author implements Serializable {
     @Element(name = "name")
     private String name;
 
-    @Element(required = false,name = "url")
-    private String url;
+    @Element(required = false,name = "uri")
+    private String uri;
 
     public String getName() {
         return name;
@@ -27,18 +27,18 @@ public class Author implements Serializable {
     }
 
     public String getUrl() {
-        return url;
+        return uri;
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.uri = url;
     }
 
     @Override
     public String toString() {
         return "Author{" +
                 "name='" + name + '\'' +
-                ", url='" + url + '\'' +
+                ", url='" + uri + '\'' +
                 '}';
     }
 }

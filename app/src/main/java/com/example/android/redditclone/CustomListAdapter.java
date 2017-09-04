@@ -1,9 +1,12 @@
 package com.example.android.redditclone;
 
+/**
+ * Created by shash on 9/4/2017.
+ */
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,21 +26,27 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by shash on 8/14/2017.
+ * Created by User on 4/4/2017.
  */
 
-public class CustomAdapter extends ArrayAdapter<Post> {
+public class CustomListAdapter  extends ArrayAdapter<Post> {
 
-    private static final String TAG = "CustomAdapter";
+    private static final String TAG = "CustomListAdapter";
+
     private Context mContext;
     private int mResource;
-    private int lastPosition= -1;
+    private int lastPosition = -1;
 
-    private static class ViewHolder{
+    /**
+     * Holds variables in a View
+     */
+    private static class ViewHolder {
         TextView title;
         TextView author;
         TextView date_updated;
@@ -45,39 +54,52 @@ public class CustomAdapter extends ArrayAdapter<Post> {
         ImageView thumbnailURL;
     }
 
-    public CustomAdapter(Context applicationContext, int card_layout_main, ArrayList<Post> posts) {
-        super(applicationContext,card_layout_main,posts);
-        mContext= applicationContext;
-        mResource= card_layout_main;
+    /**
+     * Default constructor for the PersonListAdapter
+     * @param context
+     * @param resource
+     * @param objects
+     */
+    public CustomListAdapter(Context context, int resource, ArrayList<Post> objects) {
+        super(context, resource, objects);
+        mContext = context;
+        mResource = resource;
 
+        //sets up the image loader library
         setupImageLoader();
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-        String title= getItem(position).getTitle();
-        String imgUrl= getItem(position).getThumbnailURL();
-        String author= getItem(position).getAuthor();
-        String date_updated= getItem(position).getDate_updated();
+
+
+        //get the persons information
+        String title = getItem(position).getTitle();
+        String imgUrl = getItem(position).getThumbnailURL();
+        String author = getItem(position).getAuthor();
+        String date_updated = getItem(position).getDate_updated();
 
 
         try{
+
+
+            //create the view result for showing the animation
             final View result;
 
+            //ViewHolder object
             final ViewHolder holder;
 
-            if (convertView==null){
+            if(convertView == null){
                 LayoutInflater inflater = LayoutInflater.from(mContext);
                 convertView = inflater.inflate(mResource, parent, false);
                 holder= new ViewHolder();
                 holder.title = (TextView) convertView.findViewById(R.id.cardTitle);
                 holder.thumbnailURL = (ImageView) convertView.findViewById(R.id.cardImage);
-                holder.author= (TextView) convertView.findViewById(R.id.cardAuthor);
-                holder.date_updated= (TextView) convertView.findViewById(R.id.cardUpdated);
-                holder.mProgressBar= (ProgressBar) convertView.findViewById(R.id.ProgressDialog);
-
+                holder.author = (TextView) convertView.findViewById(R.id.cardAuthor);
+                holder.date_updated = (TextView) convertView.findViewById(R.id.cardUpdated);
+                holder.mProgressBar = (ProgressBar) convertView.findViewById(R.id.cardProgressDialog);
 
                 result = convertView;
 
@@ -89,16 +111,20 @@ public class CustomAdapter extends ArrayAdapter<Post> {
             }
 
 
-            lastPosition=position;
+//            Animation animation = AnimationUtils.loadAnimation(mContext,
+//                    (position > lastPosition) ? R.anim.load_down_anim : R.anim.load_up_anim);
+//            result.startAnimation(animation);
+
+            lastPosition = position;
 
             holder.title.setText(title);
             holder.author.setText(author);
             holder.date_updated.setText(date_updated);
 
-
+            //create the imageloader object
             ImageLoader imageLoader = ImageLoader.getInstance();
 
-            int defaultImage = mContext.getResources().getIdentifier("@drawable/image_failed",null,mContext.getPackageName());
+            int defaultImage = mContext.getResources().getIdentifier("@drawable/reddit_alien",null,mContext.getPackageName());
 
             //create display options
             DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
@@ -108,7 +134,7 @@ public class CustomAdapter extends ArrayAdapter<Post> {
                     .showImageOnLoading(defaultImage).build();
 
             //download and display image from url
-            imageLoader.displayImage(imgUrl, holder.thumbnailURL, options,new ImageLoadingListener() {
+            imageLoader.displayImage(imgUrl, holder.thumbnailURL, options , new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
                     holder.mProgressBar.setVisibility(View.VISIBLE);
@@ -129,13 +155,16 @@ public class CustomAdapter extends ArrayAdapter<Post> {
             });
 
             return convertView;
-        }
-        catch (IllegalArgumentException e){
+        }catch (IllegalArgumentException e){
             Log.e(TAG, "getView: IllegalArgumentException: " + e.getMessage() );
             return convertView;
         }
+
     }
 
+    /**
+     * Required for setting up the Universal Image loader Library
+     */
     private void setupImageLoader(){
         // UNIVERSAL IMAGE LOADER SETUP
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()

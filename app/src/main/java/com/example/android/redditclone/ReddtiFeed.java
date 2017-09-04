@@ -14,7 +14,7 @@ import retrofit2.http.GET;
 public interface ReddtiFeed  {
      String BASE_URL="https://www.reddit.com/r/";
 
-    @GET("{feed_name}/.rss")
-    Call<Feed> getFeed(@retrofit2.http.Path("feed_name") String feed_name);
+    @GET("earthporn/.rss")
+    Call<Feed> getFeed();
 
 }

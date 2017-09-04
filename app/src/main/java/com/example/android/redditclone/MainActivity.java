@@ -1,9 +1,11 @@
 package com.example.android.redditclone;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -25,119 +27,79 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private static final String BASE_URL = "https://www.reddit.com/r/";
-    private Button refresh_feed;
-    private EditText mfeedName;
-    private String currentFeed;
+    private static final String BASE_URL= "https://www.reddit.com/r/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        refresh_feed= (Button) findViewById(R.id.feed_refresh);
-        mfeedName= (EditText) findViewById(R.id.edit_feeds);
-
-        initUI();
-
-        refresh_feed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String feedName= mfeedName.getText().toString();
-                if (!feedName.equals("")){
-                    currentFeed=feedName;
-                    initUI();
-                }
-                else {
-                    initUI();
-                }
-            }
-        });
-    }
-
-    private void initUI(){
-        Retrofit retrofit = new Retrofit.Builder()
+        Retrofit retrofit= new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
 
-        ReddtiFeed reddtiFeed = retrofit.create(ReddtiFeed.class);
-        Call<Feed> call = reddtiFeed.getFeed(currentFeed);
+        ReddtiFeed reddtiFeed= retrofit.create(ReddtiFeed.class);
+        Call<Feed> call= reddtiFeed.getFeed();
 
         call.enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
-                // Log.d(TAG, "onResponse: "+ response.body().getEntries());
-                Log.d(TAG, "onResponse: response" + response.toString());
+                Log.d(TAG, "onResponse: response body" + response.body().getEntries());
+                Log.d(TAG, "onResponse: Server Response"+ response.toString());
 
-                List<Entry> entries = response.body().getEntries();
-                Log.d(TAG, "onResponse: get entries" + entries);
+                List<Entry> entries= response.body().getEntries();
+                Log.d(TAG, "onResponse: entrys" + entries.get(0).getAuthor());
+                Log.d(TAG, "onResponse: updated" + entries.get(0).getUpdated());
+                Log.d(TAG, "onResponse: title" + entries.get(0).getTitle());
 
-                ArrayList<Post> posts = new ArrayList<Post>();
+                ArrayList<Post> posts= new ArrayList<Post>();
 
-                for (int i = 0; i < entries.size(); i++) {
-                    ExtractXML extractXML1 = new ExtractXML(entries.get(i).getContent(), "<a href=");
-                    List<String> postContent = extractXML1.start();
+                for (int i=0; i<entries.size();i++){
+                    ExtractXML extractXML1= new ExtractXML(entries.get(0).getContent(),"<a href=");
+                    List<String> postContent= extractXML1.start();
 
-
-                    ExtractXML extractXML2 = new ExtractXML(entries.get(i).getContent(), "<img src=");
-                    try {
-                        postContent.add(extractXML2.start().get(0));
-                    } catch (NullPointerException e) {
-                        Log.e(TAG, "onResponse: Null Pointer exception" + e.getMessage());
-                        postContent.add(null);
-                    } catch (IndexOutOfBoundsException e) {
-                        Log.e(TAG, "onResponse: Index Out of bounds exception " + e.getMessage());
-                        postContent.add(null);
-                    }
+                    ExtractXML extractXML2= new ExtractXML(entries.get(0).getContent(),"<img src=");
                     try{
-                        posts.add(new Post(
-                                entries.get(i).getTitle(),
-                                entries.get(i).getAuthor().getName(),
-                                entries.get(i).getUpdated(),
-                                postContent.get(0),
-                                postContent.get(postContent.size() - 1)
-                        ));
+                        postContent.add(extractXML2.start().get(0));
                     }catch (NullPointerException e){
-                        posts.add(new Post(
-                                entries.get(i).getTitle(),
-                                "None",
-                                entries.get(i).getUpdated(),
-                                postContent.get(0),
-                                postContent.get(postContent.size() - 1)
-                        ));
-
+                        postContent.add(null);
+                    }catch (IndexOutOfBoundsException e){
+                        postContent.add(null);
+                        Log.e(TAG, "onResponse: IndexOut of bound  (thumbnail)" +e.getMessage() );
                     }
-
+                    int lastPosition= postContent.size()-1;
+                    posts.add(new Post(
+                            entries.get(i).getTitle(),
+                            entries.get(i).getAuthor().getName(),
+                            entries.get(i).getUpdated(),
+                            postContent.get(0),
+                            postContent.get(lastPosition)
+                    ));
                 }
 
-                /*
-                for (int j = 0; j < posts.size(); j++) {
-                    Log.d(TAG, "onResponse:  \n" +
-                            "Post Url" + posts.get(j).getPostUrl() + "\n" +
-                            "ThumbNail: " + posts.get(j).getThumbnailURL() + "\n" +
-                            "Titlte" + posts.get(j).getTitle() + "\n" +
-                            "Author" + posts.get(j).getAuthor() + "\n" +
-                            "updated" + posts.get(j).getDate_updated()
-                    );
-
+                for (int j=0; j<posts.size(); j++){
+                    Log.d(TAG, "onResponse: \n" + "Post Url: " + posts.get(j).getPostURL()
+                    + "\n" + "ThumbNail Url: " + posts.get(j).getThumbnailURL() + "\n"
+                    + "Title: " + posts.get(j).getTitle()+ "\n" +
+                            "Author: " + posts.get(j).getAuthor()+"\n"
+                            + "Title: " + posts.get(j).getTitle()+ "\n"
+                            + "Updated: " + posts.get(j).getDate_updated());
                 }
-        */
-                ListView listViewPost= (ListView) findViewById(R.id.ListViewMain);
-                CustomAdapter mCustromAdapter= new CustomAdapter(getApplicationContext(),R.layout.card_layout_main,posts);
-                listViewPost.setAdapter((ListAdapter) mCustromAdapter);
+
+                ListView listView= (ListView) findViewById(R.id.ListView);
+                CustomListAdapter customListAdapter= new CustomListAdapter(MainActivity.this,R.layout.card_layout_main,posts);
+                listView.setAdapter(customListAdapter);
 
             }
-
 
 
             @Override
             public void onFailure(Call<Feed> call, Throwable t) {
-                Log.e(TAG, "onFailure: unable to retrieve RSS" + t.getMessage());
-                Toast.makeText(MainActivity.this, "an error occured", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "onFailure: Unable to retrieve RSS " + t.getMessage());
+                Toast.makeText(MainActivity.this,"An Error Occured",Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
+
 }

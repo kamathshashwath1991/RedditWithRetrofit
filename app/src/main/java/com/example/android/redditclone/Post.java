@@ -1,21 +1,23 @@
 package com.example.android.redditclone;
 
 /**
- * Created by shash on 8/13/2017.
+ * Created by shash on 9/3/2017.
  */
 
 public class Post {
+
+
     private String title;
     private String author;
     private String date_updated;
-    private String postUrl;
+    private String postURL;
     private String thumbnailURL;
 
-    public Post(String title, String author, String date_updated, String postUrl, String thumbnailURL) {
+    public Post(String title, String author, String date_updated, String postURL, String thumbnailURL) {
         this.title = title;
         this.author = author;
         this.date_updated = date_updated;
-        this.postUrl = postUrl;
+        this.postURL = postURL;
         this.thumbnailURL = thumbnailURL;
     }
 
@@ -43,12 +45,12 @@ public class Post {
         this.date_updated = date_updated;
     }
 
-    public String getPostUrl() {
-        return postUrl;
+    public String getPostURL() {
+        return postURL;
     }
 
-    public void setPostUrl(String postUrl) {
-        this.postUrl = postUrl;
+    public void setPostURL(String postURL) {
+        this.postURL = postURL;
     }
 
     public String getThumbnailURL() {
@@ -59,3 +61,4 @@ public class Post {
         this.thumbnailURL = thumbnailURL;
     }
 }
+
