@@ -49,7 +49,6 @@ public class CommentsListAdapter extends ArrayAdapter<Comment> {
         TextView author;
         TextView date_updated;
         ProgressBar mProgressBar;
-        ImageView thumbnailURL;
     }
 
     /**
@@ -91,7 +90,7 @@ public class CommentsListAdapter extends ArrayAdapter<Comment> {
                 holder.comment = (TextView) convertView.findViewById(R.id.comment);
                 holder.author = (TextView) convertView.findViewById(R.id.commentAuthor);
                 holder.date_updated = (TextView) convertView.findViewById(R.id.commentUpdated);
-                holder.mProgressBar = (ProgressBar) convertView.findViewById(R.id.commentsLoadingProgressBar);
+                holder.mProgressBar = (ProgressBar) convertView.findViewById(R.id.commentProgressBar);
 
                 result = convertView;
 
@@ -110,6 +109,8 @@ public class CommentsListAdapter extends ArrayAdapter<Comment> {
             holder.author.setText(author);
             holder.date_updated.setText(date_updated);
             holder.mProgressBar.setVisibility(View.GONE);
+
+            /// /holder.mProgressBar.setVisibility(View.GONE);
 
             return convertView;
         }catch (IllegalArgumentException e){
