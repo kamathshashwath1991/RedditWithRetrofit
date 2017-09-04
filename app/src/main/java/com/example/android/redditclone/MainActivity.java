@@ -5,10 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,19 +26,44 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final String BASE_URL= "https://www.reddit.com/r/";
+    private Button btnRefresh;
+    private EditText mFeedName;
+    private String currentFeed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        btnRefresh= (Button) findViewById(R.id.feed_refresh);
+        mFeedName= (EditText) findViewById(R.id.edit_feeds);
+
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String feedName= mFeedName.getText().toString();
+                if (!mFeedName.equals(" ")){
+                    currentFeed= feedName;
+                    init();
+                }
+                else {
+                    init();
+                }
+            }
+        });
+
+        init();
+    }
+
+    private void init() {
         Retrofit retrofit= new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
 
         ReddtiFeed reddtiFeed= retrofit.create(ReddtiFeed.class);
-        Call<Feed> call= reddtiFeed.getFeed();
+
+        Call<Feed> call= reddtiFeed.getFeed(currentFeed);
 
         call.enqueue(new Callback<Feed>() {
             @Override
@@ -69,19 +92,31 @@ public class MainActivity extends AppCompatActivity {
                         Log.e(TAG, "onResponse: IndexOut of bound  (thumbnail)" +e.getMessage() );
                     }
                     int lastPosition= postContent.size()-1;
-                    posts.add(new Post(
-                            entries.get(i).getTitle(),
-                            entries.get(i).getAuthor().getName(),
-                            entries.get(i).getUpdated(),
-                            postContent.get(0),
-                            postContent.get(lastPosition)
-                    ));
-                }
+                    try{
+                        posts.add(new Post(
+                                entries.get(i).getTitle(),
+                                entries.get(i).getAuthor().getName(),
+                                entries.get(i).getUpdated(),
+                                postContent.get(0),
+                                postContent.get(lastPosition)
+                        ));
 
+                    }catch (NullPointerException e){
+                        posts.add(new Post(
+                                entries.get(i).getTitle(),
+                                "None",
+                                entries.get(i).getUpdated(),
+                                postContent.get(0),
+                                postContent.get(lastPosition)
+                        ));
+                        Log.e(TAG, "onResponse: Null Pointer Exception "+ e.getMessage() );
+                    }
+
+                }
                 for (int j=0; j<posts.size(); j++){
                     Log.d(TAG, "onResponse: \n" + "Post Url: " + posts.get(j).getPostURL()
-                    + "\n" + "ThumbNail Url: " + posts.get(j).getThumbnailURL() + "\n"
-                    + "Title: " + posts.get(j).getTitle()+ "\n" +
+                            + "\n" + "ThumbNail Url: " + posts.get(j).getThumbnailURL() + "\n"
+                            + "Title: " + posts.get(j).getTitle()+ "\n" +
                             "Author: " + posts.get(j).getAuthor()+"\n"
                             + "Title: " + posts.get(j).getTitle()+ "\n"
                             + "Updated: " + posts.get(j).getDate_updated());
