@@ -1,20 +1,30 @@
 package com.example.android.redditclone.Comments;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.redditclone.Accounts.LoginActivity;
 import com.example.android.redditclone.ExtractXML;
+import com.example.android.redditclone.MainActivity;
 import com.example.android.redditclone.R;
 import com.example.android.redditclone.ReddtiFeed;
 import com.example.android.redditclone.URLS;
@@ -51,12 +61,14 @@ public class CommentsActivity extends AppCompatActivity{
     private static String postTitle;
     private static String postAuthor;
     private static String postUpdated;
+    private static String postId;
+    private String modhash;
+    private String username;
+    private String cookie;
 
     private int defaultImage;
-
     private String currentFeed;
     private ListView mListView;
-
     private ArrayList<Comment> mComments;
     private ProgressBar mProgressBar;
     private TextView progressText;
@@ -68,12 +80,33 @@ public class CommentsActivity extends AppCompatActivity{
         setContentView(R.layout.activity_comments);
         mProgressBar = (ProgressBar) findViewById(R.id.commentsLoadingProgressBar);
         Log.d(TAG, "onCreate: Started.");
-
+        setupToolBar();
+        getSessionParams();
         mProgressBar.setVisibility(View.VISIBLE);
         progressText= (TextView) findViewById(R.id.ProgressText);
         setupImageLoader();
         initPost();
         init();
+    }
+
+    private void setupToolBar(){
+        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Log.d(TAG, "onMenuItemClick: clicked menu item" + item);
+
+                switch (item.getItemId()){
+                    case R.id.navLogin:
+                        Intent intent= new Intent(CommentsActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                }
+                return false;
+            }
+        });
+
     }
 
     private void init(){
@@ -131,6 +164,13 @@ public class CommentsActivity extends AppCompatActivity{
 
                 mProgressBar.setVisibility(View.GONE);
                 progressText.setText("");
+
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        getUserComment(postId);
+                    }
+                });
             }
 
             @Override
@@ -148,6 +188,7 @@ public class CommentsActivity extends AppCompatActivity{
         postTitle = incomingIntent.getStringExtra("@string/post_title");
         postAuthor = incomingIntent.getStringExtra("@string/post_author");
         postUpdated = incomingIntent.getStringExtra("@string/post_updated");
+        postId= incomingIntent.getStringExtra("@string/post_id");
 
         TextView title = (TextView) findViewById(R.id.post_title);
         TextView author = (TextView) findViewById(R.id.post_author);
@@ -170,6 +211,14 @@ public class CommentsActivity extends AppCompatActivity{
             Log.e(TAG, "initPost: ArrayIndexOutOfBoundsException: " + e.getMessage() );
         }
 
+        btnReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: reply ");
+                getUserComment(postId);
+            }
+        });
+
         thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,6 +229,39 @@ public class CommentsActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    private void getUserComment(String post_id){
+        final Dialog dialog= new Dialog(CommentsActivity.this);
+        dialog.setTitle("dialog");
+        dialog.setContentView(R.layout.comment_input_dialog);
+
+        int width= (int)(getResources().getDisplayMetrics().widthPixels*0.95);
+        int height= (int)(getResources().getDisplayMetrics().heightPixels*0.60);
+        dialog.getWindow().setLayout(width,height);
+        dialog.show();
+
+        Button btnPostComment= (Button) dialog.findViewById(R.id.btn_post_comment);
+        final EditText comment= (EditText) dialog.findViewById(R.id.dialogComment);
+
+        btnPostComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Post Comment Attemp");
+            }
+        });
+    }
+
+    private void getSessionParams(){
+        SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(CommentsActivity.this);
+        username= sharedPreferences.getString("@string/SessionUsername","");
+        modhash= sharedPreferences.getString("@string/SessionModhash","");
+        cookie= sharedPreferences.getString("@string/SessionCookie","");
+
+        Log.d(TAG, "getSessionParams: Stored Session Params: \n" +
+                "username: " + username+ "\n"+
+                "modhash: " +  modhash+ "\n" +
+                "cookie " +  cookie+ "\n");
     }
 
     private void displayImage(String imageURL, ImageView imageView, final ProgressBar progressBar){
@@ -237,4 +319,20 @@ public class CommentsActivity extends AppCompatActivity{
 
         defaultImage = CommentsActivity.this.getResources().getIdentifier("@drawable/reddit_alien",null,CommentsActivity.this.getPackageName());
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.navigation_menu,menu);
+        return true;
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Log.d(TAG, "onPostResume: Session Param Called");
+        getSessionParams();
+    }
+
+
 }

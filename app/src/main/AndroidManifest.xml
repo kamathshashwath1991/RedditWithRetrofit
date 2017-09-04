@@ -23,6 +23,7 @@
             android:name=".Comments.WebViewActivity"
             android:label="@string/title_activity_web_view"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Accounts.LoginActivity"></activity>
     </application>
 
 </manifest>

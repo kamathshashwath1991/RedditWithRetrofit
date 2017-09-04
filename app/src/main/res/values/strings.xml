@@ -5,5 +5,9 @@
     <string name="post_title">post_title</string>
     <string name="post_author">post_author</string>
     <string name="post_updated">post_updated</string>
+    <string name="post_id">post_id</string>
     <string name="title_activity_web_view">WebViewActivity</string>
+    <string name="SessionUsername">com.example.android.redditclone.Accounts.SessionUsername</string>
+    <string name="SessionModhash">com.example.android.redditclone.Accounts.SessionModhash</string>
+    <string name="SessionCookie">com.example.android.redditclone.Accounts.SessionCookie</string>
 </resources>
