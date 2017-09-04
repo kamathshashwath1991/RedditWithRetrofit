@@ -1,6 +1,7 @@
 package com.example.android.redditclone;
 
 import com.example.android.redditclone.Accounts.CheckLogin;
+import com.example.android.redditclone.Comments.CheckComment;
 import com.example.android.redditclone.model.Feed;
 
 import org.simpleframework.xml.Path;
@@ -32,5 +33,12 @@ public interface ReddtiFeed  {
             @Query("user") String user,
             @Query("passwd") String password,
             @Query("api_type") String type
+    );
+    @POST("{comment}")
+    Call<CheckComment> submitComment(
+            @HeaderMap Map<String, String> headers,
+            @retrofit2.http.Path("comment") String comment,
+            @Query("parent") String parent,
+            @Query("amp;text") String text
     );
 }
