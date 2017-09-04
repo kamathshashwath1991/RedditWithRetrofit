@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onResponse: updated" + entries.get(0).getUpdated());
                 Log.d(TAG, "onResponse: title" + entries.get(0).getTitle());
 
-                ArrayList<Post> posts= new ArrayList<Post>();
+                final ArrayList<Post> posts= new ArrayList<Post>();
 
                 for (int i=0; i<entries.size();i++){
                     ExtractXML extractXML1= new ExtractXML(entries.get(0).getContent(),"<a href=");
@@ -125,6 +126,20 @@ public class MainActivity extends AppCompatActivity {
                 ListView listView= (ListView) findViewById(R.id.ListView);
                 CustomListAdapter customListAdapter= new CustomListAdapter(MainActivity.this,R.layout.card_layout_main,posts);
                 listView.setAdapter(customListAdapter);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Log.d(TAG, "onItemClick: Clicked: " + posts.get(position).toString());
+                        Intent intent = new Intent(MainActivity.this, CommentsActivity.class);
+                        intent.putExtra("@string/post_url", posts.get(position).getPostURL());
+                        intent.putExtra("@string/post_thumbnail", posts.get(position).getThumbnailURL());
+                        intent.putExtra("@string/post_title", posts.get(position).getTitle());
+                        intent.putExtra("@string/post_author", posts.get(position).getAuthor());
+                        intent.putExtra("@string/post_updated", posts.get(position).getDate_updated());
+                        startActivity(intent);
+                    }
+                });
 
             }
 
