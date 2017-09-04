@@ -143,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
             }
-
-
             @Override
             public void onFailure(Call<Feed> call, Throwable t) {
                 Log.e(TAG, "onFailure: Unable to retrieve RSS " + t.getMessage());

@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.redditclone.ExtractXML;
-import com.example.android.redditclone.MainActivity;
 import com.example.android.redditclone.R;
 import com.example.android.redditclone.ReddtiFeed;
 import com.example.android.redditclone.URLS;
@@ -73,13 +71,9 @@ public class CommentsActivity extends AppCompatActivity{
 
         mProgressBar.setVisibility(View.VISIBLE);
         progressText= (TextView) findViewById(R.id.ProgressText);
-
         setupImageLoader();
-
         initPost();
-
         init();
-
     }
 
     private void init(){
@@ -103,8 +97,6 @@ public class CommentsActivity extends AppCompatActivity{
                 for ( int i = 0; i < entrys.size(); i++){
                     ExtractXML extract = new ExtractXML(entrys.get(i).getContent(), "<div class=\"md\"><p>","</p>");
                     List<String> commentDetails = extract.start();
-
-
                     try{
                         mComments.add(new Comment(
                                 commentDetails.get(0),
@@ -177,6 +169,16 @@ public class CommentsActivity extends AppCompatActivity{
         }catch (ArrayIndexOutOfBoundsException e){
             Log.e(TAG, "initPost: ArrayIndexOutOfBoundsException: " + e.getMessage() );
         }
+
+        thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: WebIntent here: " + postURL);
+                Intent intent= new Intent(CommentsActivity.this,WebViewActivity.class);
+                intent.putExtra("url", postURL);
+                startActivity(intent);
+            }
+        });
 
     }
 

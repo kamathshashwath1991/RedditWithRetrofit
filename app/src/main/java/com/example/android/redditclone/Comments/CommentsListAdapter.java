@@ -41,9 +41,6 @@ public class CommentsListAdapter extends ArrayAdapter<Comment> {
     private int mResource;
     private int lastPosition = -1;
 
-    /**
-     * Holds variables in a View
-     */
     private static class ViewHolder {
         TextView comment;
         TextView author;
@@ -67,20 +64,13 @@ public class CommentsListAdapter extends ArrayAdapter<Comment> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        //get the persons information
         String title = getItem(position).getComment();
         String author = getItem(position).getAuthor();
         String date_updated = getItem(position).getUpdated();
 
 
         try{
-
-
-            //create the view result for showing the animation
             final View result;
-
-            //ViewHolder object
             final ViewHolder holder;
 
             if(convertView == null){
@@ -101,16 +91,12 @@ public class CommentsListAdapter extends ArrayAdapter<Comment> {
                 result = convertView;
                 holder.mProgressBar.setVisibility(View.VISIBLE);
             }
-
-
             lastPosition = position;
 
             holder.comment.setText(title);
             holder.author.setText(author);
             holder.date_updated.setText(date_updated);
             holder.mProgressBar.setVisibility(View.GONE);
-
-            /// /holder.mProgressBar.setVisibility(View.GONE);
 
             return convertView;
         }catch (IllegalArgumentException e){

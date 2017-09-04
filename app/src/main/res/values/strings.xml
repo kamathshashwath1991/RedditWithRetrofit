@@ -5,4 +5,5 @@
     <string name="post_title">post_title</string>
     <string name="post_author">post_author</string>
     <string name="post_updated">post_updated</string>
+    <string name="title_activity_web_view">WebViewActivity</string>
 </resources>
