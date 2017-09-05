@@ -236,7 +236,7 @@ public class CommentsActivity extends AppCompatActivity{
 
     private void getUserComment(final String post_id){
         final Dialog dialog= new Dialog(CommentsActivity.this);
-        dialog.setTitle("dialog");
+        dialog.setTitle("Post Your Comment");
         dialog.setContentView(R.layout.comment_input_dialog);
 
         int width= (int)(getResources().getDisplayMetrics().widthPixels*0.95);
