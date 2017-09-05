@@ -1,6 +1,7 @@
 package com.example.android.redditclone.Comments;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,6 +22,7 @@ public class WebViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview_layout);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         WebView webView= (WebView) findViewById(R.id.webview);
         final ProgressBar progressBar= (ProgressBar) findViewById(R.id.webviewLoadingProgressBar);

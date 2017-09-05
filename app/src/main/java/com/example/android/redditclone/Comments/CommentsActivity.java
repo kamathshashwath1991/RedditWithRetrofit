@@ -3,6 +3,7 @@ package com.example.android.redditclone.Comments;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -81,6 +82,8 @@ public class CommentsActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         mProgressBar = (ProgressBar) findViewById(R.id.commentsLoadingProgressBar);
         Log.d(TAG, "onCreate: Started.");
         setupToolBar();
