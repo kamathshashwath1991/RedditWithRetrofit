@@ -18,7 +18,9 @@
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/toolbar_main">
+                android:id="@+id/toolbar_main"
+                android:background="@drawable/border">
+
             </android.support.v7.widget.Toolbar>
         </RelativeLayout>
 
@@ -30,7 +32,7 @@
             android:id="@+id/linearLayout"
             android:orientation="horizontal"
             android:weightSum="100"
-            >
+            android:background="@drawable/borderblack">
 
             <EditText
                 android:layout_width="0dp"
@@ -44,12 +46,13 @@
 
             <Button
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:text="Refresh Feed"
                 android:layout_gravity="center"
                 android:id="@+id/feed_refresh"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:background="@drawable/blue_rounded_button"/>
 
         </LinearLayout>
 
