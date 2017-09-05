@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Feed> call, Throwable t) {
                 Log.e(TAG, "onFailure: Unable to retrieve RSS " + t.getMessage());
-                Toast.makeText(MainActivity.this,"An Error Occured",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,"Please enter SubReddit Section",Toast.LENGTH_SHORT).show();
             }
         });
     }
